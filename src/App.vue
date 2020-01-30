@@ -1,10 +1,45 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <AppTaskSearch v-model="search" />
+    <AppTaskList :tasks="filteredTasks" />
+    <AppTaskAdd @addTask="addTask" />
+  </div>
 </template>
 
 <script>
+import tasks from "./api/tasks.js";
+import AppTaskList from "./components/AppTaskList.vue";
+import AppTaskSearch from "./components/AppTaskSearch.vue";
+import AppTaskAdd from "./components/AppTaskAdd.vue";
 export default {
-  name: "app"
+  name: "app",
+  created() {
+    this.tasks = tasks;
+  },
+  data() {
+    return {
+      tasks: [],
+      search: ""
+    };
+  },
+  methods: {
+    addTask(task) {
+      this.tasks.push({
+        title: task,
+        completed: false
+      });
+    }
+  },
+  components: {
+    AppTaskList,
+    AppTaskSearch,
+    AppTaskAdd
+  },
+  computed: {
+    filteredTasks() {
+      return this.tasks.filter(task => task.title.includes(this.search));
+    }
+  }
 };
 </script>
 
@@ -16,5 +51,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+ul {
+  text-align: left;
 }
 </style>
