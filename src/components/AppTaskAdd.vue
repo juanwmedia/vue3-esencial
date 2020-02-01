@@ -10,18 +10,31 @@
 </template>
 
 <script>
+import { ref } from "@vue/composition-api";
 export default {
   name: "AppTaskAdd",
-  data() {
-    return {
-      task: ""
-    };
-  },
-  methods: {
-    addTask() {
-      this.$emit("addTask", this.task);
-      this.task = "";
+  setup(props, { emit }) {
+    // Modelo local
+    const task = ref("");
+
+    // Método local
+    function addTask() {
+      emit("addTask", task.value);
+      task.value = "";
     }
+    return { task, addTask };
   }
+  // Vue2
+  // data() {
+  //   return {
+  //     task: ""
+  //   };
+  // },
+  // methods: {
+  //   addTask() {
+  //     this.$emit("addTask", this.task);
+  //     this.task = "";
+  //   }
+  // }
 };
 </script>
