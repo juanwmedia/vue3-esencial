@@ -7,49 +7,15 @@
 </template>
 
 <script>
-import taskList from "./api/tasks.js";
+import useTasksSpace from "./use/tasksSpace.js";
 import AppTaskList from "./components/AppTaskList.vue";
 import AppTaskSearch from "./components/AppTaskSearch.vue";
 import AppTaskAdd from "./components/AppTaskAdd.vue";
-import { computed, watch, reactive, toRefs } from "@vue/composition-api";
+
 export default {
   name: "app",
   setup() {
-    const tasksData = reactive({
-      tasks: taskList,
-      search: "",
-      filteredTasks: computed(() => {
-        return tasksData.tasks.filter(task =>
-          task.title.includes(tasksData.search)
-        );
-      })
-    });
-
-    function addTask(task) {
-      tasksData.tasks.push({
-        title: task,
-        completed: false
-      });
-    }
-
-    const { tasks, search } = toRefs(tasksData);
-
-    watch(() => {
-      console.log(tasks.value.length);
-    });
-
-    watch(search, (newSearch, oldSearch) => {
-      console.log(`Antes buscabas ${oldSearch} y ahora buscas ${newSearch}`);
-    });
-
-    // const tasks = ref(taskList);
-    // const search = ref("");
-
-    // const filteredTasks = computed(() => {
-    //   return tasks.value.filter(task => task.title.includes(search.value));
-    // });
-
-    return { ...toRefs(tasksData), addTask };
+    return { ...useTasksSpace() };
   },
   components: {
     AppTaskList,
