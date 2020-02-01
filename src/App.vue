@@ -11,12 +11,20 @@ import taskList from "./api/tasks.js";
 import AppTaskList from "./components/AppTaskList.vue";
 import AppTaskSearch from "./components/AppTaskSearch.vue";
 import AppTaskAdd from "./components/AppTaskAdd.vue";
-import { ref, computed } from "@vue/composition-api";
+import { ref, computed, watch } from "@vue/composition-api";
 export default {
   name: "app",
   setup() {
     const tasks = ref(taskList);
     const search = ref("");
+
+    watch(() => {
+      console.log(tasks.value.length);
+    });
+
+    watch(search, (newSearch, oldSearch) => {
+      console.log(`Antes buscabas ${oldSearch} y ahora buscas ${newSearch}`);
+    });
 
     function addTask(task) {
       tasks.value.push({
