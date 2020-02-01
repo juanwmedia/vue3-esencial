@@ -7,39 +7,58 @@
 </template>
 
 <script>
-import tasks from "./api/tasks.js";
+import taskList from "./api/tasks.js";
 import AppTaskList from "./components/AppTaskList.vue";
 import AppTaskSearch from "./components/AppTaskSearch.vue";
 import AppTaskAdd from "./components/AppTaskAdd.vue";
+import { ref, computed } from "@vue/composition-api";
 export default {
   name: "app",
-  created() {
-    this.tasks = tasks;
-  },
-  data() {
-    return {
-      tasks: [],
-      search: ""
-    };
-  },
-  methods: {
-    addTask(task) {
-      this.tasks.push({
+  setup() {
+    const tasks = ref(taskList);
+    const search = ref("");
+
+    function addTask(task) {
+      tasks.value.push({
         title: task,
         completed: false
       });
     }
+
+    const filteredTasks = computed(() => {
+      return tasks.value.filter(task => task.title.includes(search.value));
+    });
+
+    return { tasks, search, addTask, filteredTasks };
   },
   components: {
     AppTaskList,
     AppTaskSearch,
     AppTaskAdd
-  },
-  computed: {
-    filteredTasks() {
-      return this.tasks.filter(task => task.title.includes(this.search));
-    }
   }
+  // Vue2
+  // created() {
+  //   this.tasks = tasks;
+  // },
+  // data() {
+  //   return {
+  //     tasks: [],
+  //     search: ""
+  //   };
+  // },
+  // methods: {
+  //   addTask(task) {
+  //     this.tasks.push({
+  //       title: task,
+  //       completed: false
+  //     });
+  //   }
+  // },
+  // computed: {
+  //   filteredTasks() {
+  //     return this.tasks.filter(task => task.title.includes(this.search));
+  //   }
+  // },
 };
 </script>
 
