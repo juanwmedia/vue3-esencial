@@ -5,7 +5,7 @@
     <input
       type="search"
       :value="search"
-      @input="$emit('input', $event.target.value)"
+      @input="input($event.target.value)"
       placeholder="Start searching..."
     />
   </div>
@@ -14,6 +14,11 @@
 <script>
 export default {
   name: "AppTaskSearch",
-  props: ["search"]
+  props: ["search"],
+  methods: {
+    input(value) {
+      this.$emit("input", value);
+    }
+  }
 };
 </script>
