@@ -11,12 +11,28 @@ import taskList from "./api/tasks.js";
 import AppTaskList from "./components/AppTaskList.vue";
 import AppTaskSearch from "./components/AppTaskSearch.vue";
 import AppTaskAdd from "./components/AppTaskAdd.vue";
-import { ref, computed, watch } from "@vue/composition-api";
+import { computed, watch, reactive, toRefs } from "@vue/composition-api";
 export default {
   name: "app",
   setup() {
-    const tasks = ref(taskList);
-    const search = ref("");
+    const tasksData = reactive({
+      tasks: taskList,
+      search: "",
+      filteredTasks: computed(() => {
+        return tasksData.tasks.filter(task =>
+          task.title.includes(tasksData.search)
+        );
+      })
+    });
+
+    function addTask(task) {
+      tasksData.tasks.push({
+        title: task,
+        completed: false
+      });
+    }
+
+    const { tasks, search } = toRefs(tasksData);
 
     watch(() => {
       console.log(tasks.value.length);
@@ -26,18 +42,14 @@ export default {
       console.log(`Antes buscabas ${oldSearch} y ahora buscas ${newSearch}`);
     });
 
-    function addTask(task) {
-      tasks.value.push({
-        title: task,
-        completed: false
-      });
-    }
+    // const tasks = ref(taskList);
+    // const search = ref("");
 
-    const filteredTasks = computed(() => {
-      return tasks.value.filter(task => task.title.includes(search.value));
-    });
+    // const filteredTasks = computed(() => {
+    //   return tasks.value.filter(task => task.title.includes(search.value));
+    // });
 
-    return { tasks, search, addTask, filteredTasks };
+    return { ...toRefs(tasksData), addTask };
   },
   components: {
     AppTaskList,
