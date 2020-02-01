@@ -12,10 +12,17 @@
 <script>
 export default {
   name: "AppTaskSearch",
-  methods: {
-    input(value) {
-      this.$emit("input", value);
+  setup(props, context) {
+    function input(value) {
+      context.emit("input", value);
     }
+    return { input };
   }
+  // Vue 2
+  // methods: {
+  //   input(value) {
+  //     this.$emit("input", value);
+  //   }
+  // }
 };
 </script>
