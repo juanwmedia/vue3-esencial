@@ -1,8 +1,10 @@
-import taskList from "@/api/tasks.js";
+// import taskList from "@/api/tasks.js";
+import store from "@/store.js";
 import { computed, watch, reactive, toRefs } from "@vue/composition-api";
 export default function useTasksSpace() {
   const tasksData = reactive({
-    tasks: taskList,
+    // tasks: taskList,
+    tasks: store.state.tasks,
     search: "",
     filteredTasks: computed(() => {
       return tasksData.tasks.filter(task =>
@@ -12,10 +14,17 @@ export default function useTasksSpace() {
   });
 
   function addTask(task) {
-    tasksData.tasks.push({
-      title: task,
-      completed: false
-    });
+    // tasksData.tasks.push({
+    //   title: task,
+    //   completed: false
+    // });
+
+    store
+      .dispatch("checkTaskProfanity", {
+        title: task,
+        completed: true
+      })
+      .catch(error => alert(error));
   }
 
   const { tasks, search } = toRefs(tasksData);
